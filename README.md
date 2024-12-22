@@ -17,5 +17,6 @@
 -next().
 -next function and error along with res.send().
 app.use("/route",rh,rh1,rh2,rh3,rh4,rh5);
--what is middlleware.
+-what is middlleware. why do we need it.
 -How express JS basically handles requests behind the schenes.
+-Different between app.use and app.all.
