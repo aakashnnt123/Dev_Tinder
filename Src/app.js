@@ -6,6 +6,7 @@ const Usermodel = require('./Models/user')
 
 app.use(express.json());
 
+//insert data
 app.post('/signup' , async (req , res)=>{
   
   console.log(req.body);
@@ -25,7 +26,65 @@ catch(err)
 })
 
 
+// get user by email..
+app.get("/user" , async (req , res)=>{
+   const useremail = req.body.emailId;
+   try{
+    const users = await Usermodel.findOne({emailId : useremail});
+    res.send(users)
+  }
+  //  try{
+  //   const user = await Usermodel.find({emailId : useremail});
+  //   res.send(user);
+  //  }
+   catch(err)
+   {
+    res.status(400).send("error Occur");
+   }
+   
+})
 
+//get all the user back..
+app.get("/feed" , async (req , res)=>{
+  try{
+    const users = await Usermodel.find({});
+    res.send(users)
+  }
+  catch(err)
+   {
+    res.status(400).send("error Occur");
+   }
+})
+
+//detete API...
+
+app.delete("/user" , async(req,res)=>{
+  const userId = req.body.userId;
+  try{
+      const user = await Usermodel.findByIdAndDelete({_id : userId});
+      res.send("User deleted Succeccfully");
+  }
+  catch(err)
+   {
+    res.status(400).send("error Occur");
+   }
+})
+
+//Update API...
+app.patch("/user" , async (req,res)=>{
+  const userId = req.body.userId;
+   const data = req.body;
+
+   try{
+        await Usermodel.findByIdAndUpdate({_id : userId},data);
+         res.send("User Data Update")
+     }
+   catch(err)
+   {
+    res.status(400).send("error Occur");
+   }
+  
+})
 
 
 connectDB().then(()=>{
