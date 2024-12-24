@@ -19,7 +19,7 @@ try{
 }
 catch(err)
 {
-  res.status(400).send("error Occur");
+  res.status(400).send("error Occur :" + err.message);
 }
  
 
@@ -39,7 +39,7 @@ app.get("/user" , async (req , res)=>{
   //  }
    catch(err)
    {
-    res.status(400).send("error Occur");
+    res.status(400).send("error Occur :" + err.message);
    }
    
 })
@@ -52,7 +52,7 @@ app.get("/feed" , async (req , res)=>{
   }
   catch(err)
    {
-    res.status(400).send("error Occur");
+    res.status(400).send("error Occur :" + err.message);
    }
 })
 
@@ -66,7 +66,7 @@ app.delete("/user" , async(req,res)=>{
   }
   catch(err)
    {
-    res.status(400).send("error Occur");
+    res.status(400).send("error Occur :" + err.message);
    }
 })
 
@@ -76,12 +76,14 @@ app.patch("/user" , async (req,res)=>{
    const data = req.body;
 
    try{
-        await Usermodel.findByIdAndUpdate({_id : userId},data);
+        await Usermodel.findByIdAndUpdate({_id : userId},data,{
+          returnDocument:"after" , runValidators: true
+        });
          res.send("User Data Update")
      }
    catch(err)
    {
-    res.status(400).send("error Occur");
+    res.status(400).send("error Occur :" + err.message);
    }
   
 })
