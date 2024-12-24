@@ -1,4 +1,5 @@
 const mongoose= require('mongoose');
+const validator = require('validator');
 
 const UserSchema = new mongoose.Schema({
   firstName : {
@@ -13,14 +14,24 @@ const UserSchema = new mongoose.Schema({
   emailId : {
     type : String,
     required : true,
-    trim : true
+    trim : true,
+    unique : true,
+    validate(value){
+        if(!validator.isEmail(value)){
+          throw new Error("Invalid Email address :"+ value);
+        }
+    }
   },
   password : {
     type : String,
     required : true,
     lowercase : true,
-    unique : true,
-    trim : true
+    trim : true,
+    validate(value){
+      if(!validator.isStrongPassword(value)){
+        throw new Error("Weak Password :"+ value);
+      }
+  }
   },
   age : {
     type : Number,
@@ -36,7 +47,12 @@ const UserSchema = new mongoose.Schema({
   },
   photoUrl :{
     type : String,
-    default : "https://www.aquasafemine.com/wp-content/uploads/2018/06/dummy-man-570x570.png"
+    default : "https://www.aquasafemine.com/wp-content/uploads/2018/06/dummy-man-570x570.png",
+    validate(value){
+      if(!validator.isURL(value)){
+        throw new Error("Invalid Photo URL  :"+ value);
+      }
+  }
   },
   about :{
     type : String,
