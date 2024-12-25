@@ -1,29 +1,71 @@
 const express = require('express');
 const connectDB = require("./Config/Database");
 const app = express();
-const Usermodel = require('./Models/user')
-
+const Usermodel = require('./Models/user');
+const{validateSignupData} = require('./utils/validation');
+const bcrypt = require('bcrypt');
+const validator = require('validator');
 
 app.use(express.json());
+
+// Login API...
+
+app.post('/login' , async (req , res)=>{
+  try{
+      const{emailId, password} = req.body;
+      
+
+       const user = await Usermodel.findOne({emailId : emailId});
+        if(!user)
+        {
+          throw new Error("Invalid Credentials");
+        }
+
+       const ispassword = await bcrypt.compare(password , user.password);
+
+       if(ispassword){
+        res.send("Login Successfully");
+       }
+
+       else{
+        throw new Error("password is not correct");
+       }
+}
+  catch(err)
+  {
+      res.status(400).send("Error :" + err.message);
+  }
+});
 
 //insert data
 app.post('/signup' , async (req , res)=>{
   
-  console.log(req.body);
-
-  const User = new Usermodel(req.body);
-  
+  // console.log(req.body);
 try{
+
+  const {firstName , lastName , emailId , password} = req.body; 
+
+  validateSignupData(req);
+
+  const passwordHash = await bcrypt.hash(password, 10);
+  // console.log(passwordHash);
+
+
+  const User = new Usermodel({
+    firstName,
+    lastName,
+    emailId,
+    password : passwordHash,
+  });
+  
   await User.save();
  res.send("User Added Successfully");
 }
 catch(err)
 {
-  res.status(400).send("error Occur :" + err.message);
+  res.status(400).send("ERROR :" + err.message);
 }
- 
-
-})
+ })
 
 
 // get user by email..
