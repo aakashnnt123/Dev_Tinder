@@ -5,8 +5,13 @@ const Usermodel = require('./Models/user');
 const{validateSignupData} = require('./utils/validation');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
+const cookieParser = require('cookie-parser');
+const Jwt = require('jsonwebtoken');
+const {UserAuth} = require('./middlewares/auth');
 
 app.use(express.json());
+app.use(cookieParser());
+
 
 // Login API...
 
@@ -23,9 +28,14 @@ app.post('/login' , async (req , res)=>{
 
        const ispassword = await bcrypt.compare(password , user.password);
 
-       if(ispassword){
+       if(ispassword)
+        {
+
+          const token = await Jwt.sign({_id : user._id},"DEV@tinder@123",{expiresIn :"1d"});
+        
+        res.cookie("token" , token);
         res.send("Login Successfully");
-       }
+        }
 
        else{
         throw new Error("password is not correct");
@@ -37,7 +47,26 @@ app.post('/login' , async (req , res)=>{
   }
 });
 
-//insert data
+// get profile.
+app.get('/profile' ,  UserAuth ,async (req,res)=>{
+  try{
+   
+   const user = req.user;
+   
+
+  if(!user){
+    throw new Error("User Does not exist");
+  }
+  res.send(user);
+  }
+  catch(err)
+  {
+      res.status(400).send("Error :" + err.message);
+  } 
+  
+})
+
+//SignUp
 app.post('/signup' , async (req , res)=>{
   
   // console.log(req.body);
@@ -67,60 +96,24 @@ catch(err)
 }
  })
 
-
-// get user by email..
-app.get("/user" , async (req , res)=>{
-   const useremail = req.body.emailId;
-   try{
-    const users = await Usermodel.findOne({emailId : useremail});
-    res.send(users)
-  }
-  //  try{
-  //   const user = await Usermodel.find({emailId : useremail});
-  //   res.send(user);
-  //  }
-   catch(err)
-   {
-    res.status(400).send("error Occur :" + err.message);
-   }
-   
+// send connection request...
+app.post('/sendConnectionRequest' , UserAuth , (req , res)=>{
+    const user = req.user;
+    
+    console.log("sending a connection request by : " ,user.firstName+user.lastName);
+    res.send("Connection Request Send Successfully..");
 })
 
-//get all the user back..
-app.get("/feed" , async (req , res)=>{
-  try{
-    const users = await Usermodel.find({});
-    res.send(users)
-  }
-  catch(err)
-   {
-    res.status(400).send("error Occur :" + err.message);
-   }
-})
 
-//detete API...
 
-app.delete("/user" , async(req,res)=>{
-  const userId = req.body.userId;
-  try{
-      const user = await Usermodel.findByIdAndDelete({_id : userId});
-      res.send("User deleted Succeccfully");
-  }
-  catch(err)
-   {
-    res.status(400).send("error Occur :" + err.message);
-   }
-})
+
+
 
 //Update API...
 app.patch("/user" , async (req,res)=>{
   const userId = req.body.userId;
    const data = req.body;
-
-   
-
-
-   try{
+try{
 
     const Allowed_Update = ["userId","photoUrl" ,"about","Skills"];
 
