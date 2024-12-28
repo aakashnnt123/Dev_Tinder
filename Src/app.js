@@ -16,38 +16,6 @@ app.use('/' , requestRouter);
 
 
 
-//Update API...
-// app.patch("/user" , async (req,res)=>{
-//   const userId = req.body.userId;
-//    const data = req.body;
-// try{
-
-//     const Allowed_Update = ["userId","photoUrl" ,"about","Skills"];
-
-
-//     const IsUpdateAllowed = Object.keys(data).every((k)=> Allowed_Update.includes(k)
-//   );
-
-//   if(!IsUpdateAllowed){
-//     throw new Error("Update not allowed");
-//     ;
-//   }
-
-//         await Usermodel.findByIdAndUpdate({_id : userId},data,{
-//           returnDocument:"after" , runValidators: true
-//         });
-//          res.send("User Data Update")
-//      }
-//    catch(err)
-//    {
-//     res.status(400).send("error Occur :" + err.message);
-//    }
-  
-// })
-
-
-
-
 connectDB().then(()=>{
   console.log("Database connection establised...");
   PORT = 3000;
