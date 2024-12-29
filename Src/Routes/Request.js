@@ -21,9 +21,9 @@ requestRouter.post('/request/send/:status/:toUserId' , UserAuth , async (req , r
       throw new Error("Invalid status types");
    }
 
-   const toUserPresent = await Usermodel.findById(toUserId);
+   const toUser = await Usermodel.findById(toUserId);
    
-   if(!toUserPresent)
+   if(!toUser)
    {
     throw new Error("User not Found")
    }
@@ -49,7 +49,7 @@ requestRouter.post('/request/send/:status/:toUserId' , UserAuth , async (req , r
      const data=await connectionRequest.save();
 
      res.json({
-      message:"Connection Request Successfully",
+      message:req.user.firstName+" is "+Status+" in "+toUser.firstName ,
       data
      })
   }
