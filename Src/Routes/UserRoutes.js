@@ -15,7 +15,7 @@ UserRouter.get('/user/requests/received'  , UserAuth , async (req , res)=>{
         toUserId : loggedInuser._id,
         Status : "interested",
 
-      }).populate("fromUserId" ,["firstName" , "lastName"]);
+      }).populate("fromUserId" ,["firstName" , "lastName" , "photoUrl","about","Skills"]);
       
       res.json({message : "Data fetchsuccessfully" ,data : connectionRequest});
   }
