@@ -42,7 +42,7 @@ authRouter.post("/login", async (req, res) => {
     if (!user) {
       throw new Error("Invalid Credentials");
     }
-
+   
     const ispassword = await bcrypt.compare(password, user.password);
 
     if (ispassword) {
@@ -50,9 +50,13 @@ authRouter.post("/login", async (req, res) => {
         expiresIn: "1d",
       });
 
-      res.cookie("token", token);
+      res.cookie("token", token ,{
+        expires : new Date(Date.now()+ 8*3600000)
+      });
+
       res.json({
           msg: "Login Successfully",
+          user : user
       });
     } else {
       throw new Error("password is not correct");
