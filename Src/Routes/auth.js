@@ -14,6 +14,8 @@ authRouter.post("/signup", async (req, res) => {
 
     validateSignupData(req);
 
+    // console.log("Request body:", req.body);
+
     const passwordHash = await bcrypt.hash(password, 10);
     // console.log(passwordHash);
 
@@ -49,7 +51,9 @@ authRouter.post("/login", async (req, res) => {
       });
 
       res.cookie("token", token);
-      res.send("Login Successfully");
+      res.json({
+          msg: "Login Successfully",
+      });
     } else {
       throw new Error("password is not correct");
     }
