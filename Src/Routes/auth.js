@@ -40,7 +40,7 @@ authRouter.post("/login", async (req, res) => {
 
     const user = await Usermodel.findOne({ emailId: emailId });
     if (!user) {
-      throw new Error("Invalid Credentials");
+      throw new Error(" Invalid Credentials");
     }
    
     const ispassword = await bcrypt.compare(password, user.password);
@@ -59,7 +59,7 @@ authRouter.post("/login", async (req, res) => {
           user : user
       });
     } else {
-      throw new Error("password is not correct");
+      throw new Error(" Invalid Credentials");
     }
   } catch (err) {
     res.status(400).send("Error :" + err.message);
