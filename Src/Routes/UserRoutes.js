@@ -62,7 +62,7 @@ UserRouter.get('/feed' , UserAuth , async(req , res)=>{
     const loggedInuser = req.user;
 
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = parseInt(req.query.limit) || 15;
     const skip = (page-1)*limit;
 
     const connectionRequest =  await connectionRequestModel.find({
@@ -74,9 +74,8 @@ UserRouter.get('/feed' , UserAuth , async(req , res)=>{
 
     const HideUserFromFeed = new Set();
      connectionRequest.forEach((req) => {
-      HideUserFromFeed.add(req.fromUserId.toString
-        ());
-        HideUserFromFeed.add(req.toUserId.toString());
+      HideUserFromFeed.add(req.fromUserId.toString());
+      HideUserFromFeed.add(req.toUserId.toString());
      });
     
      

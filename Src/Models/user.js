@@ -5,7 +5,7 @@ const UserSchema = new mongoose.Schema({
   firstName : {
     type : String,
     required : true,
-    minlength : 4,
+    minlength : 3,
     maxlenght : 50
   },
   lastName : {
@@ -58,9 +58,17 @@ const UserSchema = new mongoose.Schema({
   about :{
     type : String,
     default : "This is a default about of the user",
+    minlength : 3,
+    maxlenght : 20
   },
-  Skills :{
-    type : [String]
+  Skills: {
+    type: [String],
+    validate: {
+      validator: function (val) {
+        return val.length <= 5;
+      },
+      message: 'You can add up to 5 skills only.'
+    }
   }
 },
 {
