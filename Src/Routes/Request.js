@@ -15,7 +15,7 @@ requestRouter.post('/request/send/:status/:toUserId' , UserAuth , async (req , r
   if(fromUserId == toUserId){
     throw new Error("Invalid Request!")
   }
-   const isAllowedstatus = ["ignores" , "interested"];
+   const isAllowedstatus = ["ignore" , "interested"];
    if(!isAllowedstatus.includes(Status))
    {
       throw new Error("Invalid status types");
